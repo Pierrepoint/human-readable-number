@@ -1,13 +1,12 @@
 module.exports = function toReadable (number) {
     let sum = "";
     let stringNumber = String(number);
-    let lastDigitOfNumber = +stringNumber.slice(-1);
-    let secondDigitOfNumber = +stringNumber.slice(-2,-1);
-    let hundredS = +stringNumber.slice(-3,-2);
+    let lastDigitOfNumber = +stringNumber.length - 1;
+    let secondDigitOfNumber = +stringNumber.length - 2;
+    let hundredS = +stringNumber.length - 3;
     let simpleDigits = ['zero','one','two','three','four','five','six','seven','eight','nine'];
     let teenS = ['ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
     let decimalS = ['twenty','thirty','fourty','fifty','sixty','seventy','eighty','ninety'];
-    if (stringNumber.length <= 0 || stringNumber.length > 3){return 'error'}
     function simpleDigitsFunction(lastDigitOfNumber){
         switch (lastDigitOfNumber) {
         case 0:
@@ -34,7 +33,7 @@ module.exports = function toReadable (number) {
     }
     function twoDigitsInNumber(secondDigitOfNumber){
         if(secondDigitOfNumber != 1){
-            switch (lastDigitOfNumber) {
+            switch (secondDigitOfNumber) {
             case 2:
                 return decimalS[0];
             case 3:
@@ -99,20 +98,23 @@ module.exports = function toReadable (number) {
             return simpleDigits[9] + 'hundred';
         }
     }
-    for(let a = 0; a < 1000; a++){
-        if (stringNumber.length == 1){
+    if (stringNumber.length <= 0 || stringNumber.length > 3){return 'error'}
+    else if (stringNumber.length == 1){
             sum = simpleDigitsFunction;
-        }
-        else if (stringNumber.length == 2){
+    }
+    else if (stringNumber.length == 2){
             if (secondDigitOfNumber == 1){sum = twoDigitsInNumber;}
             else if (secondDigitOfNumber > 1){
-            sum = twoDigitsInNumber + simpleDigitsFunction;}
-        }
-        else if (stringNumber.length == 3){
+                if (lastDigitOfNumber == 0){sum = twoDigitsInNumber}
+            else {sum = twoDigitsInNumber + simpleDigitsFunction;}
+            }
+    }
+    else if (stringNumber.length == 3){
             if (secondDigitOfNumber == 1){sum = threeDigitsInNumber + twoDigitsInNumber;}
             else if (secondDigitOfNumber > 1){
-            sum = twoDigitsInNumber + simpleDigitsFunction +simpleDigitsFunction;}
+                if (lastDigitOfNumber == 0){sum = threeDigitsInNumber + twoDigitsInNumber}
+            else {sum = threeDigitsInNumber + twoDigitsInNumber + simpleDigitsFunction;}
+            }
         }
-    }
-    return sum;
+return sum;
 }
